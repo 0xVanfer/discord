@@ -7,7 +7,9 @@ import (
 	"github.com/bwmarrin/discordgo"
 )
 
-// Create a new name bot.
+// Create a new bot.
+//
+// If the bot is not a reply bot, "replyFrequency" can use 0.
 func New(token string, botName string, replyFrequency time.Duration) *DiscordBot {
 	// Return value error is always nil.
 	newSession, _ := discordgo.New("Bot " + token)

@@ -1,7 +1,6 @@
 package discord
 
 import (
-	"errors"
 	"strings"
 
 	"github.com/bwmarrin/discordgo"
@@ -9,25 +8,11 @@ import (
 
 // Add a reply rule to the bot.
 func (bot *DiscordBot) AddReplyRule(rule ReplyRule) error {
-	// Try to read the channel's last msg.
-	msgs, err := bot.Session.ChannelMessages(rule.ChannelID, 1, "", "", "")
-	if err != nil {
-		// Has no access to this channel.
-		return err
-	}
-
-	// If content is "", auth of the bot is not enough.
-	content := msgs[0].Content
-	if content == "" {
-		return errors.New("bot auth not enough, could not read msg content")
-	}
-
-	// Add a new rule.
-	bot.ReplyRules = append(bot.ReplyRules, rule)
-
 	// If the channel already exist, skip and not update last read map.
 	for channel := range bot.LastRead {
 		if channel == rule.ChannelID {
+			// Add a new rule.
+			bot.ReplyRules = append(bot.ReplyRules, rule)
 			return nil
 		}
 	}
@@ -35,10 +20,14 @@ func (bot *DiscordBot) AddReplyRule(rule ReplyRule) error {
 	// Last read map add the channel.
 	bot.LastRead[rule.ChannelID] = MsgInfo{}
 	// Update last read.
-	err = bot.UpdateLastReadMsgs()
+	err := bot.UpdateLastReadMsgs()
 	if err != nil {
 		return err
 	}
+
+	// Add a new rule.
+	bot.ReplyRules = append(bot.ReplyRules, rule)
+
 	return nil
 }
 
