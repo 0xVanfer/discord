@@ -30,7 +30,7 @@ func (bot *DiscordBot) AddReplyRule(rule ReplyRule) {
 // Whether the rule should be replied.
 func (rule *ReplyRule) shouldReply(msg *discordgo.Message) bool {
 	// Should not reply if channel not match.
-	if utils.ContainInArray(msg.ChannelID, rule.ChannelIDs) {
+	if !utils.ContainInArrayX(msg.ChannelID, rule.ChannelIDs) {
 		return false
 	}
 	switch rule.RuleType {
