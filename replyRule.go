@@ -3,31 +3,34 @@ package discord
 import (
 	"strings"
 
+	"github.com/0xVanfer/utils"
 	"github.com/bwmarrin/discordgo"
 )
 
 // Add a reply rule to the bot.
-func (bot *DiscordBot) AddReplyRule(rule ReplyRule) error {
-	// If the channel already exist, skip and not update last read map.
-	exist := false
-	for channel := range bot.LastRead {
-		if channel == rule.ChannelID {
-			exist = true
-			break
+func (bot *DiscordBot) AddReplyRule(rule ReplyRule) {
+	for _, channelID := range rule.ChannelIDs {
+		// If the channel already exist, skip and not update last read map.
+		exist := false
+		for channel := range bot.LastRead {
+			if channel == channelID {
+				exist = true
+				break
+			}
 		}
+		if !exist {
+			// Last read map add this new channel.
+			bot.LastRead[channelID] = MsgInfo{}
+		}
+		// Add a new rule.
+		bot.ReplyRules = append(bot.ReplyRules, rule)
 	}
-	if !exist {
-		// Last read map add this new channel.
-		bot.LastRead[rule.ChannelID] = MsgInfo{}
-	}
-	// Add a new rule.
-	bot.ReplyRules = append(bot.ReplyRules, rule)
-	return nil
 }
 
 // Whether the rule should be replied.
 func (rule *ReplyRule) shouldReply(msg *discordgo.Message) bool {
-	if msg.ChannelID != rule.ChannelID {
+	// Should not reply if channel not match.
+	if utils.ContainInArray(msg.ChannelID, rule.ChannelIDs) {
 		return false
 	}
 	switch rule.RuleType {

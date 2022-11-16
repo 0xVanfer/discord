@@ -23,7 +23,7 @@ type MsgInfo struct {
 // Simple rule for reply.
 type ReplyRule struct {
 	// Channel id in string.
-	ChannelID string
+	ChannelIDs []string
 	// 0: Equalfold. The msg content must be equalfold as the required text.
 	// 1: Contain. The msg content must contain the required text.
 	// 2: Start with. The msg content must start with the required text.
