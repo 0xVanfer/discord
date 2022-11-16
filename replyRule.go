@@ -3,7 +3,6 @@ package discord
 import (
 	"strings"
 
-	"github.com/0xVanfer/utils"
 	"github.com/bwmarrin/discordgo"
 )
 
@@ -30,29 +29,31 @@ func (bot *DiscordBot) AddReplyRule(rule ReplyRule) {
 // Whether the rule should be replied.
 func (rule *ReplyRule) shouldReply(msg *discordgo.Message) bool {
 	// Should not reply if channel not match.
-	if !utils.ContainInArrayX(msg.ChannelID, rule.ChannelIDs) {
-		return false
+	for _, channel := range rule.ChannelIDs {
+		if strings.EqualFold(msg.ChannelID, channel) {
+			switch rule.RuleType {
+			// Equalfold.
+			case 0:
+				return strings.EqualFold(rule.CheckText, msg.Content)
+			// Contain.
+			case 1:
+				return strings.Contains(strings.ToLower(msg.Content), strings.ToLower(rule.CheckText))
+			// Start with.
+			case 2:
+				if len(msg.Content) <= len(rule.CheckText) {
+					return false
+				}
+				if !strings.EqualFold(msg.Content[:len(rule.CheckText)], rule.CheckText) {
+					return false
+				}
+				if rule.LengthLimit == 0 {
+					return true
+				}
+				return len(msg.Content[len(rule.CheckText):]) == rule.LengthLimit
+			default:
+				return false
+			}
+		}
 	}
-	switch rule.RuleType {
-	// Equalfold.
-	case 0:
-		return strings.EqualFold(rule.CheckText, msg.Content)
-	// Contain.
-	case 1:
-		return strings.Contains(strings.ToLower(msg.Content), strings.ToLower(rule.CheckText))
-	// Start with.
-	case 2:
-		if len(msg.Content) <= len(rule.CheckText) {
-			return false
-		}
-		if !strings.EqualFold(msg.Content[:len(rule.CheckText)], rule.CheckText) {
-			return false
-		}
-		if rule.LengthLimit == 0 {
-			return true
-		}
-		return len(msg.Content[len(rule.CheckText):]) == rule.LengthLimit
-	default:
-		return false
-	}
+	return false
 }
