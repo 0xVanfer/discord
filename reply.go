@@ -15,7 +15,7 @@ func (bot *DiscordBot) reply(channel string, msgId string, text string) {
 
 // Start the reply and never stop.
 func (bot *DiscordBot) StartReply() {
-	fmt.Println("start to listen and reply")
+	fmt.Println(bot.BotName, "start to listen and reply")
 	defer utils.Restart(bot.StartReply)
 	// Update last read msgs map first.
 	err := bot.UpdateLastReadMsgs()
