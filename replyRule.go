@@ -9,25 +9,19 @@ import (
 // Add a reply rule to the bot.
 func (bot *DiscordBot) AddReplyRule(rule ReplyRule) error {
 	// If the channel already exist, skip and not update last read map.
+	exist := false
 	for channel := range bot.LastRead {
 		if channel == rule.ChannelID {
-			// Add a new rule.
-			bot.ReplyRules = append(bot.ReplyRules, rule)
-			return nil
+			exist = true
+			break
 		}
 	}
-
-	// Last read map add the channel.
-	bot.LastRead[rule.ChannelID] = MsgInfo{}
-	// Update last read.
-	err := bot.UpdateLastReadMsgs()
-	if err != nil {
-		return err
+	if !exist {
+		// Last read map add this new channel.
+		bot.LastRead[rule.ChannelID] = MsgInfo{}
 	}
-
 	// Add a new rule.
 	bot.ReplyRules = append(bot.ReplyRules, rule)
-
 	return nil
 }
 

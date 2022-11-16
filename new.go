@@ -29,7 +29,7 @@ func (bot *DiscordBot) Open() error {
 	if err != nil {
 		return err
 	}
-	fmt.Println("bot opened")
+	fmt.Println("bot", bot.BotName, "opened")
 	return nil
 }
 
