@@ -7,6 +7,8 @@ import (
 	"github.com/bwmarrin/discordgo"
 )
 
+// Deprecated: Use AddReplyRules instead.
+//
 // Add a reply rule to the bot.
 func (bot *DiscordBot) AddReplyRule(rule ReplyRule) {
 	for _, channelID := range rule.ChannelIDs {
@@ -25,6 +27,28 @@ func (bot *DiscordBot) AddReplyRule(rule ReplyRule) {
 	}
 	// Add a new rule.
 	bot.replyRules = append(bot.replyRules, rule)
+}
+
+// Add reply rules to the bot.
+func (bot *DiscordBot) AddReplyRules(rules ...ReplyRule) {
+	for _, rule := range rules {
+		for _, channelID := range rule.ChannelIDs {
+			// If the channel already exist, skip and not update last read map.
+			exist := false
+			for channel := range bot.lastRead {
+				if channel == channelID {
+					exist = true
+					break
+				}
+			}
+			if !exist {
+				// Last read map add this new channel.
+				bot.lastRead[channelID] = msgInfo{}
+			}
+		}
+		// Add a new rule.
+		bot.replyRules = append(bot.replyRules, rule)
+	}
 }
 
 // Whether the rule should be replied.
