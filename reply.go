@@ -2,6 +2,7 @@ package discord
 
 import (
 	"fmt"
+	"strings"
 	"time"
 
 	"github.com/0xVanfer/utils"
@@ -9,8 +10,24 @@ import (
 )
 
 // Reply to a msg.
-func (bot *DiscordBot) reply(channel string, msgId string, text string) {
-	bot.Session.ChannelMessageSendReply(channel, text, &discordgo.MessageReference{MessageID: msgId, ChannelID: channel})
+func (bot *DiscordBot) reply(channel string, msgId string, function any) {
+	var replyText string
+	switch v := function.(type) {
+	case string:
+		replyText = v
+	case func(*DiscordBot, string, string) string:
+		replyText = v(bot, channel, msgId)
+	}
+	if replyText == "" {
+		return
+	}
+	// Reply the same text will cause endless loop.
+	msg, err := bot.Session.ChannelMessage(channel, msgId)
+	if (err == nil) && strings.ContainsAny(replyText, msg.Content) {
+		fmt.Println("must not reply the same text, please edit your function")
+		return
+	}
+	bot.Session.ChannelMessageSendReply(channel, replyText, &discordgo.MessageReference{MessageID: msgId, ChannelID: channel})
 }
 
 // Start the reply and never stop.
@@ -32,7 +49,11 @@ func (bot *DiscordBot) StartReply() {
 			for _, msg := range msgs {
 				for _, rule := range bot.ReplyRules {
 					if rule.shouldReply(msg) {
-						bot.reply(channel, msg.ID, rule.ReplyText)
+						if rule.ReplyFunc == nil {
+							bot.reply(channel, msg.ID, rule.ReplyText)
+						} else {
+							bot.reply(channel, msg.ID, rule.ReplyFunc)
+						}
 					}
 				}
 			}

@@ -34,6 +34,10 @@ type ReplyRule struct {
 	// Text to check if should reply.
 	CheckText string
 	// Text to reply.
-	// Todo: Support func() or any?
+	// Deprecated: Use ReplyFunc instead.
 	ReplyText string
+	// Use function to decide what to reply.
+	// Input: bot, channel, msgId.
+	// Output: ReplyText.
+	ReplyFunc func(*DiscordBot, string, string) string
 }
