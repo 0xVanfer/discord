@@ -39,5 +39,5 @@ type ReplyRule struct {
 	// Use function to decide what to reply.
 	// Input: bot, channel, msgId.
 	// Output: ReplyText.
-	ReplyFunc func(*DiscordBot, string, string) string
+	ReplyFunc func(bot *DiscordBot, channelID, msgID string) (replyText string)
 }
