@@ -2,7 +2,6 @@ package discord
 
 import (
 	"fmt"
-	"strings"
 	"time"
 
 	"github.com/0xVanfer/utils"
@@ -21,10 +20,9 @@ func (bot *DiscordBot) reply(channel string, msgId string, function any) {
 	if replyText == "" {
 		return
 	}
-	// Reply the same text will cause endless loop.
+	// Will not reply to bot msg.
 	msg, err := bot.Session.ChannelMessage(channel, msgId)
-	if (err == nil) && strings.ContainsAny(replyText, msg.Content) {
-		fmt.Println("must not reply the same text, please edit your function")
+	if (err == nil) && msg.Author.Bot {
 		return
 	}
 	bot.Session.ChannelMessageSendReply(channel, replyText, &discordgo.MessageReference{MessageID: msgId, ChannelID: channel})
