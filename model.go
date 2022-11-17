@@ -34,7 +34,6 @@ type ReplyRule struct {
 	// Text to check if should reply.
 	CheckText string
 	// Text to reply.
-	// Deprecated: Use ReplyFunc instead.
 	ReplyText string
 	// Use function to decide what to reply.
 	// Input: bot, channel, msgId.
