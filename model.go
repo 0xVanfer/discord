@@ -9,13 +9,13 @@ import (
 type DiscordBot struct {
 	Session        *discordgo.Session
 	BotName        string
-	LastRead       map[string]MsgInfo
-	ReplyRules     []ReplyRule
-	ReplyFrequency time.Duration
+	lastRead       map[string]msgInfo
+	replyRules     []ReplyRule
+	replyFrequency time.Duration
 }
 
 // Simple msg info for recording last read msg.
-type MsgInfo struct {
+type msgInfo struct {
 	MsgID  string    // Msg id.
 	SendAt time.Time // Last update time.
 }

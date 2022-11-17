@@ -16,9 +16,9 @@ func New(token string, botName string, replyFrequency time.Duration) *DiscordBot
 	newBot := &DiscordBot{
 		Session:        newSession,
 		BotName:        botName,
-		LastRead:       map[string]MsgInfo{},
-		ReplyRules:     []ReplyRule{},
-		ReplyFrequency: replyFrequency,
+		lastRead:       map[string]msgInfo{},
+		replyRules:     []ReplyRule{},
+		replyFrequency: replyFrequency,
 	}
 	return newBot
 }

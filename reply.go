@@ -38,14 +38,14 @@ func (bot *DiscordBot) StartReply() {
 	}
 	fmt.Println(bot.BotName, "start to listen and reply")
 	for {
-		for channel := range bot.LastRead {
+		for channel := range bot.lastRead {
 			msgs, err := bot.readLastMsgs(channel, 10)
 			if err != nil {
 				fmt.Println(err)
 				continue
 			}
 			for _, msg := range msgs {
-				for _, rule := range bot.ReplyRules {
+				for _, rule := range bot.replyRules {
 					if rule.shouldReply(msg) {
 						if rule.ReplyFunc == nil {
 							bot.reply(channel, msg.ID, rule.ReplyText)
@@ -56,6 +56,6 @@ func (bot *DiscordBot) StartReply() {
 				}
 			}
 		}
-		time.Sleep(bot.ReplyFrequency)
+		time.Sleep(bot.replyFrequency)
 	}
 }

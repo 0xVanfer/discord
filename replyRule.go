@@ -12,7 +12,7 @@ func (bot *DiscordBot) AddReplyRule(rule ReplyRule) {
 	for _, channelID := range rule.ChannelIDs {
 		// If the channel already exist, skip and not update last read map.
 		exist := false
-		for channel := range bot.LastRead {
+		for channel := range bot.lastRead {
 			if channel == channelID {
 				exist = true
 				break
@@ -20,11 +20,11 @@ func (bot *DiscordBot) AddReplyRule(rule ReplyRule) {
 		}
 		if !exist {
 			// Last read map add this new channel.
-			bot.LastRead[channelID] = MsgInfo{}
+			bot.lastRead[channelID] = msgInfo{}
 		}
 	}
 	// Add a new rule.
-	bot.ReplyRules = append(bot.ReplyRules, rule)
+	bot.replyRules = append(bot.replyRules, rule)
 }
 
 // Whether the rule should be replied.
