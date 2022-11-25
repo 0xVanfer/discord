@@ -24,11 +24,6 @@ func (bot *DiscordBot) reply(channelID string, msgID string, function any) {
 	if replyText == "" {
 		return
 	}
-	// Will not reply to bot msg.
-	msg, err := bot.Session.ChannelMessage(channelID, msgID)
-	if (err == nil) && msg.Author.Bot {
-		return
-	}
 	bot.Session.ChannelMessageSendReply(channelID, replyText, &discordgo.MessageReference{MessageID: msgID, ChannelID: channelID})
 }
 
