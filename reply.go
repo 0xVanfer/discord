@@ -9,23 +9,27 @@ import (
 )
 
 // Reply to a msg.
-func (bot *DiscordBot) reply(channel string, msgId string, function any) {
+//
+// Input:
+//
+//	function: Must be string or func(*DiscordBot, string, string) string.
+func (bot *DiscordBot) reply(channelID string, msgID string, function any) {
 	var replyText string
 	switch v := function.(type) {
 	case string:
 		replyText = v
 	case func(*DiscordBot, string, string) string:
-		replyText = v(bot, channel, msgId)
+		replyText = v(bot, channelID, msgID)
 	}
 	if replyText == "" {
 		return
 	}
 	// Will not reply to bot msg.
-	msg, err := bot.Session.ChannelMessage(channel, msgId)
+	msg, err := bot.Session.ChannelMessage(channelID, msgID)
 	if (err == nil) && msg.Author.Bot {
 		return
 	}
-	bot.Session.ChannelMessageSendReply(channel, replyText, &discordgo.MessageReference{MessageID: msgId, ChannelID: channel})
+	bot.Session.ChannelMessageSendReply(channelID, replyText, &discordgo.MessageReference{MessageID: msgID, ChannelID: channelID})
 }
 
 // Start the reply and never stop.
@@ -52,6 +56,11 @@ func (bot *DiscordBot) StartReply() {
 						} else {
 							bot.reply(channel, msg.ID, rule.ReplyFunc)
 						}
+					}
+				}
+				for _, rule := range bot.reactRules {
+					if rule.shouldReact(msg) {
+						bot.react(channel, msg.ID, rule.ReactEmojiID)
 					}
 				}
 			}

@@ -12,6 +12,7 @@ type DiscordBot struct {
 	lastRead       map[string]msgInfo
 	replyRules     []ReplyRule
 	replyFrequency time.Duration
+	reactRules     []ReactRule
 }
 
 // Simple msg info for recording last read msg.
@@ -39,4 +40,18 @@ type ReplyRule struct {
 	// Input: bot, channel, msgId.
 	// Output: ReplyText.
 	ReplyFunc func(bot *DiscordBot, channelID, msgID string) (replyText string)
+}
+
+type ReactRule struct {
+	// Channel id in string.
+	ChannelIDs []string
+	// 0: Any. React to any msg.
+	// 1: Contain. The msg content must contain the required text.
+	RuleType int
+	// Only used when "RuleType" is 1.
+	RequiredText string
+	// Emoji to react.
+	//
+	// Emoji string: github.com/enescakir/emoji suggested.
+	ReactEmojiID string
 }

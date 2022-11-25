@@ -63,9 +63,15 @@ func (rule *ReplyRule) shouldReply(msg *discordgo.Message) bool {
 		return strings.EqualFold(rule.CheckText, msg.Content)
 	// Contain.
 	case 1:
+		if rule.CheckText == "" {
+			return false
+		}
 		return strings.Contains(strings.ToLower(msg.Content), strings.ToLower(rule.CheckText))
 	// Start with.
 	case 2:
+		if rule.CheckText == "" {
+			return false
+		}
 		if len(msg.Content) <= len(rule.CheckText) {
 			return false
 		}
