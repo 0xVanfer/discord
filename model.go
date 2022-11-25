@@ -53,5 +53,5 @@ type ReactRule struct {
 	// Emoji to react.
 	//
 	// Emoji string: github.com/enescakir/emoji suggested.
-	ReactEmojiID string
+	ReactEmojiIDs []string
 }

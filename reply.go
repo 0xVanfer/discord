@@ -60,7 +60,9 @@ func (bot *DiscordBot) StartReply() {
 				}
 				for _, rule := range bot.reactRules {
 					if rule.shouldReact(msg) {
-						bot.react(channel, msg.ID, rule.ReactEmojiID)
+						for _, enojiID := range rule.ReactEmojiIDs {
+							bot.react(channel, msg.ID, enojiID)
+						}
 					}
 				}
 			}
