@@ -38,7 +38,7 @@ type ReplyRule struct {
 	ReplyText string
 	// Use function to decide what to reply.
 	// Input: bot, channel, msgId.
-	// Output: ReplyText.
+	// Output: replyText.
 	ReplyFunc func(bot *DiscordBot, channelID, msgID string) (replyText string)
 }
 
@@ -54,4 +54,8 @@ type ReactRule struct {
 	//
 	// Emoji string: github.com/enescakir/emoji suggested.
 	ReactEmojiIDs []string
+	// Use function to decide what to react.
+	// Input: bot, channel, msgId.
+	// Output: reply emojis.
+	ReactFunc func(bot *DiscordBot, channelID, msgID string) (reactEmojiIDs []string)
 }

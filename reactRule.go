@@ -7,8 +7,20 @@ import (
 	"github.com/bwmarrin/discordgo"
 )
 
-func (bot *DiscordBot) react(channelID string, msgID string, emojiID string) {
-	bot.Session.MessageReactionAdd(channelID, msgID, emojiID)
+func (bot *DiscordBot) react(channelID string, msgID string, function any) {
+	var emojiIDs []string
+	switch v := function.(type) {
+	case []string:
+		emojiIDs = v
+	case func(*DiscordBot, string, string) []string:
+		emojiIDs = v(bot, channelID, msgID)
+	}
+	if emojiIDs == nil {
+		return
+	}
+	for _, emojiID := range emojiIDs {
+		bot.Session.MessageReactionAdd(channelID, msgID, emojiID)
+	}
 }
 
 // Add reply rules to the bot.
