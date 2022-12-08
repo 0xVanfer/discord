@@ -40,6 +40,8 @@ type ReplyRule struct {
 	// Input: bot, channel, msgId.
 	// Output: replyText.
 	ReplyFunc func(bot *DiscordBot, channelID, msgID string) (replyText string)
+	// Whether to reply in DM.
+	ReplyInDM bool
 }
 
 type ReactRule struct {

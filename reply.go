@@ -13,7 +13,7 @@ import (
 // Input:
 //
 //	function: Must be string or func(*DiscordBot, string, string) string.
-func (bot *DiscordBot) reply(channelID string, msgID string, function any) {
+func (bot *DiscordBot) reply(channelID string, msgID string, userID string, replyInDM bool, function any) {
 	var replyText string
 	switch v := function.(type) {
 	case string:
@@ -24,7 +24,11 @@ func (bot *DiscordBot) reply(channelID string, msgID string, function any) {
 	if replyText == "" {
 		return
 	}
-	bot.Session.ChannelMessageSendReply(channelID, replyText, &discordgo.MessageReference{MessageID: msgID, ChannelID: channelID})
+	if replyInDM {
+		bot.SendDM(userID, replyText)
+	} else {
+		bot.Session.ChannelMessageSendReply(channelID, replyText, &discordgo.MessageReference{MessageID: msgID, ChannelID: channelID})
+	}
 }
 
 // Start the reply and never stop.
@@ -47,9 +51,9 @@ func (bot *DiscordBot) StartReply() {
 				for _, rule := range bot.replyRules {
 					if rule.shouldReply(msg) {
 						if rule.ReplyFunc == nil {
-							bot.reply(channel, msg.ID, rule.ReplyText)
+							bot.reply(channel, msg.ID, msg.Author.ID, rule.ReplyInDM, rule.ReplyText)
 						} else {
-							bot.reply(channel, msg.ID, rule.ReplyFunc)
+							bot.reply(channel, msg.ID, msg.Author.ID, rule.ReplyInDM, rule.ReplyFunc)
 						}
 					}
 				}
