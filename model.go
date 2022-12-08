@@ -42,6 +42,9 @@ type ReplyRule struct {
 	ReplyFunc func(bot *DiscordBot, channelID, msgID string) (replyText string)
 	// Whether to reply in DM.
 	ReplyInDM bool
+	// Whether should reply to the user replies to.
+	// If this is true, should not reply in DM.
+	ReplyToInitialMessage bool
 }
 
 type ReactRule struct {

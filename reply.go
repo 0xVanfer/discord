@@ -9,25 +9,33 @@ import (
 )
 
 // Reply to a msg.
-//
-// Input:
-//
-//	function: Must be string or func(*DiscordBot, string, string) string.
-func (bot *DiscordBot) reply(channelID string, msgID string, userID string, replyInDM bool, function any) {
+func (bot *DiscordBot) reply(channelID string, msg *discordgo.Message, rule ReplyRule) {
 	var replyText string
-	switch v := function.(type) {
-	case string:
-		replyText = v
-	case func(*DiscordBot, string, string) string:
-		replyText = v(bot, channelID, msgID)
+	if rule.ReplyFunc == nil {
+		replyText = rule.ReplyText
+	} else {
+		replyText = rule.ReplyFunc(bot, channelID, msg.ID)
 	}
 	if replyText == "" {
 		return
 	}
-	if replyInDM {
-		bot.SendDM(userID, replyText)
+	var replyMsgID string = msg.ID
+	// Change the target to reply to.
+	if rule.ReplyToInitialMessage {
+		// Should not reply to another's message in DM.
+		// Will cause chaos.
+		if rule.ReplyInDM {
+			return
+		}
+		if msg.ReferencedMessage != nil {
+			replyMsgID = msg.ReferencedMessage.ID
+		}
+	}
+	// Whether should reply in DM.
+	if rule.ReplyInDM {
+		bot.SendDM(msg.Author.ID, replyText)
 	} else {
-		bot.Session.ChannelMessageSendReply(channelID, replyText, &discordgo.MessageReference{MessageID: msgID, ChannelID: channelID})
+		bot.Session.ChannelMessageSendReply(channelID, replyText, &discordgo.MessageReference{MessageID: replyMsgID, ChannelID: channelID})
 	}
 }
 
@@ -50,11 +58,7 @@ func (bot *DiscordBot) StartReply() {
 			for _, msg := range msgs {
 				for _, rule := range bot.replyRules {
 					if rule.shouldReply(msg) {
-						if rule.ReplyFunc == nil {
-							bot.reply(channel, msg.ID, msg.Author.ID, rule.ReplyInDM, rule.ReplyText)
-						} else {
-							bot.reply(channel, msg.ID, msg.Author.ID, rule.ReplyInDM, rule.ReplyFunc)
-						}
+						bot.reply(channel, msg, rule)
 					}
 				}
 				for _, rule := range bot.reactRules {
