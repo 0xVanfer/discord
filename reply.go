@@ -50,7 +50,7 @@ func (bot *DiscordBot) StartReply() {
 	fmt.Println(bot.BotName, "start to listen and reply")
 	for {
 		for channel := range bot.lastRead {
-			msgs, err := bot.readLastMsgs(channel, 10)
+			msgs, err := bot.readLastMsgs(channel, 100)
 			if err != nil {
 				fmt.Println(err)
 				continue
