@@ -17,7 +17,7 @@ func (bot *DiscordBot) UpdateLastReadMsgs() error {
 // Read the last "amount" of msgs of a channel.
 func (bot *DiscordBot) readLastMsgs(channel string, amount int) ([]*discordgo.Message, error) {
 	afterId := bot.lastRead[channel].MsgID
-	res, err := bot.Session.ChannelMessages(channel, 10, "", afterId, "")
+	res, err := bot.Session.ChannelMessages(channel, 100, "", afterId, "")
 	if len(res) == 0 {
 		return res, err
 	}
