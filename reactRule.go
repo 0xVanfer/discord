@@ -7,6 +7,7 @@ import (
 	"github.com/bwmarrin/discordgo"
 )
 
+// Add reaction to a msg.
 func (bot *DiscordBot) react(channelID string, msgID string, function any) {
 	var emojiIDs []string
 	switch v := function.(type) {
@@ -61,7 +62,6 @@ func (rule *ReactRule) shouldReact(msg *discordgo.Message) bool {
 			return false
 		}
 		return strings.Contains(strings.ToLower(msg.Content), strings.ToLower(rule.RequiredText))
-	// Start with.
 	default:
 		return false
 	}

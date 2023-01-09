@@ -7,12 +7,18 @@ import (
 )
 
 type DiscordBot struct {
-	Session        *discordgo.Session
-	BotName        string
-	lastRead       map[string]msgInfo
-	replyRules     []ReplyRule
+	Session *discordgo.Session
+	BotName string
+	// Last read messages.
+	// map[channel id] = msgInfo
+	lastRead map[string]msgInfo
+	// Reply rules.
+	replyRules []ReplyRule
+	// React rules.
+	reactRules []ReactRule
+	// The time between two checks.
+	// Both reply and react use replyFrequency.
 	replyFrequency time.Duration
-	reactRules     []ReactRule
 }
 
 // Simple msg info for recording last read msg.
@@ -56,8 +62,6 @@ type ReactRule struct {
 	// Only used when "RuleType" is 1.
 	RequiredText string
 	// Emoji to react.
-	//
-	// Emoji string: github.com/enescakir/emoji suggested.
 	ReactEmojiIDs []string
 	// Use function to decide what to react.
 	// Input: bot, channel, msgId.
