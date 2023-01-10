@@ -32,7 +32,9 @@ type ReplyRule struct {
 	// Channel id in string.
 	ChannelIDs []string
 	// 0: Equalfold. The msg content must be equalfold as the required text.
+	//
 	// 1: Contain. The msg content must contain the required text.
+	//
 	// 2: Start with. The msg content must start with the required text.
 	RuleType int
 	// Only used when "RuleType" is 2. Msg content after the required text may has a length limit.
@@ -57,6 +59,7 @@ type ReactRule struct {
 	// Channel id in string.
 	ChannelIDs []string
 	// 0: Any. React to any msg.
+	//
 	// 1: Contain. The msg content must contain the required text.
 	RuleType int
 	// Only used when "RuleType" is 1.
