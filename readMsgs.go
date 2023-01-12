@@ -10,8 +10,11 @@ import (
 func (bot *DiscordBot) readLatestMsgs(channelID string, amount int) ([]*discordgo.Message, error) {
 	afterId := bot.lastRead[channelID].MsgID
 	res, err := bot.Session.ChannelMessages(channelID, amount, "", afterId, "")
+	if err != nil {
+		return nil, err
+	}
 	if len(res) == 0 {
-		return res, err
+		return nil, err
 	}
 	bot.lastRead[channelID] = msgInfo{MsgID: res[0].ID, SendAt: res[0].Timestamp}
 	return res, nil
