@@ -55,6 +55,8 @@ type ReplyRule struct {
 	// Whether should reply to the user replies to.
 	// If this is true, should not reply in DM.
 	ReplyToInitialMessage bool
+	// Whether the author can be a bot.
+	ReplyToBot bool
 }
 
 type ReactRule struct {

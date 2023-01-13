@@ -57,7 +57,7 @@ func (rule *ReplyRule) shouldReply(msg *discordgo.Message) bool {
 	if !utils.ContainInArrayX(msg.ChannelID, rule.ChannelIDs) {
 		return false
 	}
-	if msg.Author.Bot {
+	if !rule.ReplyToBot && msg.Author.Bot {
 		return false
 	}
 	switch rule.RuleType {
