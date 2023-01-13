@@ -85,6 +85,9 @@ func (rule *ReplyRule) shouldReply(msg *discordgo.Message) bool {
 			return true
 		}
 		return len(msg.Content[len(rule.CheckText):]) == rule.LengthLimit
+	// Any.
+	case 3:
+		return true
 	default:
 		return false
 	}

@@ -36,6 +36,8 @@ type ReplyRule struct {
 	// 1: Contain. The msg content must contain the required text.
 	//
 	// 2: Start with. The msg content must start with the required text.
+	//
+	// 3. Any.
 	RuleType int
 	// Only used when "RuleType" is 2. Msg content after the required text may has a length limit.
 	// 0 for no limit.( If limited to 0, use 0 for "RuleType" instead.)
