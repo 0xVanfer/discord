@@ -43,11 +43,7 @@ func (bot *DiscordBot) reply(channelID string, msg *discordgo.Message, rule Repl
 			return
 		}
 		if msg.ReferencedMessage != nil {
-			replyMsg.Reference = &discordgo.MessageReference{
-				MessageID: msg.ReferencedMessage.ID,
-				ChannelID: msg.ReferencedMessage.ChannelID,
-				GuildID:   msg.ReferencedMessage.GuildID,
-			}
+			replyMsg.Reference = msg.ReferencedMessage.Reference()
 		}
 	}
 
@@ -59,7 +55,7 @@ func (bot *DiscordBot) reply(channelID string, msg *discordgo.Message, rule Repl
 	} else {
 		// If not replying to anything, should send the msg in ReplyMsgFunc.
 		if replyMsg.Reference == nil {
-			replyMsg.Reference = &discordgo.MessageReference{MessageID: msg.ID, ChannelID: msg.ChannelID, GuildID: msg.GuildID}
+			replyMsg.Reference = msg.Reference()
 		}
 		bot.Session.ChannelMessageSendComplex(channelID, replyMsg)
 	}
