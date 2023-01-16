@@ -30,6 +30,11 @@ func (bot *DiscordBot) reply(channelID string, msg *discordgo.Message, rule Repl
 		return
 	}
 
+	// Some error occured.
+	if replyMsg == nil {
+		return
+	}
+
 	// Change the target to reply to.
 	if rule.ReplyToInitialMessage {
 		// Should not reply to another's message in DM.
