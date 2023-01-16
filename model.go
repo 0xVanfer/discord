@@ -39,17 +39,19 @@ type ReplyRule struct {
 	//
 	// 3. Any.
 	RuleType int
-	// Only used when "RuleType" is 2. Msg content after the required text may has a length limit.
+	// Only used when "RuleType" is 2.
+	//
+	// Msg content after the required text may has a length limit.
 	// 0 for no limit.( If limited to 0, use 0 for "RuleType" instead.)
 	LengthLimit int
 	// Text to check if should reply.
 	CheckText string
-	// Text to reply.
-	ReplyText string
+
+	// Message to reply.
+	ReplyMsg *discordgo.MessageSend
 	// Use function to decide what to reply.
-	// Input: bot, channel, msgId.
-	// Output: replyText.
-	ReplyFunc func(bot *DiscordBot, channelID, msgID string) (replyText string)
+	ReplyMsgFunc func(bot *DiscordBot, msg *discordgo.Message) (replyMsg *discordgo.MessageSend)
+
 	// Whether to reply in DM.
 	ReplyInDM bool
 	// Whether should reply to the user replies to.
@@ -57,6 +59,11 @@ type ReplyRule struct {
 	ReplyToInitialMessage bool
 	// Whether the author can be a bot.
 	ReplyToBot bool
+
+	// Deprecated: Use ReplyMsg instead.
+	ReplyText string
+	// Deprecated: Use ReplyMsgFunc instead.
+	ReplyFunc func(bot *DiscordBot, channelID, msgID string) (replyText string)
 }
 
 type ReactRule struct {

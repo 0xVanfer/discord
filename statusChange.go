@@ -1,6 +1,8 @@
 package discord
 
-import "errors"
+import (
+	"errors"
+)
 
 // Change the bot's nicknames in the guilds.
 func (bot *DiscordBot) ChangeNames(nickname string, guilds ...string) error {

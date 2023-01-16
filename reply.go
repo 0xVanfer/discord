@@ -10,16 +10,26 @@ import (
 
 // Reply to a msg.
 func (bot *DiscordBot) reply(channelID string, msg *discordgo.Message, rule ReplyRule) {
-	var replyText string
-	if rule.ReplyFunc == nil {
-		replyText = rule.ReplyText
+	var replyMsg *discordgo.MessageSend
+
+	if rule.ReplyMsg != nil {
+		// Use reply msg.
+		replyMsg = rule.ReplyMsg
+	} else if rule.ReplyMsgFunc != nil {
+		// Use reply msg func.
+		replyMsg = rule.ReplyMsgFunc(bot, msg)
+	} else if rule.ReplyFunc != nil {
+		// Deprecated.
+		fmt.Println("ReplyRule.ReplyFunc is deprecated. Use ReplyMsgFunc instead.")
+		replyMsg = &discordgo.MessageSend{Content: rule.ReplyFunc(bot, channelID, msg.ID)}
+	} else if rule.ReplyText != "" {
+		// Deprecated.
+		fmt.Println("ReplyRule.ReplyText is deprecated. Use ReplyMsg instead.")
+		replyMsg = &discordgo.MessageSend{Content: rule.ReplyText}
 	} else {
-		replyText = rule.ReplyFunc(bot, channelID, msg.ID)
-	}
-	if replyText == "" {
 		return
 	}
-	var replyMsgID string = msg.ID
+
 	// Change the target to reply to.
 	if rule.ReplyToInitialMessage {
 		// Should not reply to another's message in DM.
@@ -28,14 +38,25 @@ func (bot *DiscordBot) reply(channelID string, msg *discordgo.Message, rule Repl
 			return
 		}
 		if msg.ReferencedMessage != nil {
-			replyMsgID = msg.ReferencedMessage.ID
+			replyMsg.Reference = &discordgo.MessageReference{
+				MessageID: msg.ReferencedMessage.ID,
+				ChannelID: msg.ReferencedMessage.ChannelID,
+				GuildID:   msg.ReferencedMessage.GuildID,
+			}
 		}
 	}
+
 	// Whether should reply in DM.
 	if rule.ReplyInDM {
-		bot.SendDM(msg.Author.ID, replyText)
+		// DM message has no reference msg.
+		replyMsg.Reference = nil
+		bot.SendDM(msg.Author.ID, replyMsg)
 	} else {
-		bot.Session.ChannelMessageSendReply(channelID, replyText, &discordgo.MessageReference{MessageID: replyMsgID, ChannelID: channelID})
+		// If not replying to anything, should send the msg in ReplyMsgFunc.
+		if replyMsg.Reference == nil {
+			replyMsg.Reference = &discordgo.MessageReference{MessageID: msg.ID, ChannelID: msg.ChannelID, GuildID: msg.GuildID}
+		}
+		bot.Session.ChannelMessageSendComplex(channelID, replyMsg)
 	}
 }
 
