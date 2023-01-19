@@ -2,23 +2,28 @@ package discord
 
 import (
 	"fmt"
-	"time"
 
 	"github.com/bwmarrin/discordgo"
 )
 
+type DiscordBot struct {
+	Session *discordgo.Session
+	BotName string
+	// Reply rules.
+	replyRules []ReplyRule
+}
+
 // Create a new bot.
-//
-// If the bot is not a reply bot, "replyFrequency" can use 0.
-func New(token string, botName string, replyFrequency time.Duration) *DiscordBot {
+func New(token string, botName string) *DiscordBot {
 	// Return value error is always nil.
-	newSession, _ := discordgo.New("Bot " + token)
+	newSession, err := discordgo.New("Bot " + token)
+	if err != nil {
+		panic(err)
+	}
 	newBot := &DiscordBot{
-		Session:        newSession,
-		BotName:        botName,
-		lastRead:       map[string]msgInfo{},
-		replyRules:     []ReplyRule{},
-		replyFrequency: replyFrequency,
+		Session:    newSession,
+		BotName:    botName,
+		replyRules: []ReplyRule{},
 	}
 	return newBot
 }
@@ -29,12 +34,12 @@ func (bot *DiscordBot) Open() error {
 	if err != nil {
 		return err
 	}
-	fmt.Println("bot", bot.BotName, "opened")
+	fmt.Println("Bot", bot.BotName, "opened.")
 	return nil
 }
 
 // Close a bot.
 func (bot *DiscordBot) Close() {
 	bot.Session.Close()
-	fmt.Println("bot closed")
+	fmt.Println("Bot", bot.BotName, "closed.")
 }

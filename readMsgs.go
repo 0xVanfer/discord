@@ -6,20 +6,6 @@ import (
 	"github.com/bwmarrin/discordgo"
 )
 
-// Read the latest "amount" of msgs of a channel.
-func (bot *DiscordBot) readLatestMsgs(channelID string, amount int) ([]*discordgo.Message, error) {
-	afterId := bot.lastRead[channelID].MsgID
-	res, err := bot.Session.ChannelMessages(channelID, amount, "", afterId, "")
-	if err != nil {
-		return nil, err
-	}
-	if len(res) == 0 {
-		return nil, err
-	}
-	bot.lastRead[channelID] = msgInfo{MsgID: res[0].ID, SendAt: res[0].Timestamp}
-	return res, nil
-}
-
 // Read all the msgs of a channel.
 //
 // startTimestamp and endTimestamp can either be 0 for no start or end limits.
