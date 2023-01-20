@@ -7,6 +7,8 @@ import (
 	"github.com/bwmarrin/discordgo"
 )
 
+// Decide whether a new msg should be replied.
+
 // Simple rule for reply.
 type ReplyRule struct {
 	// Channel id in string.
@@ -28,18 +30,19 @@ type ReplyRule struct {
 	CheckText string
 
 	// Use function to decide what to reply.
-	ReplyFunc func(bot *DiscordBot, msg *discordgo.MessageCreate) (replyMsg *discordgo.MessageSend)
+	ReplyFunc func(bot *DiscordBot, msg *discordgo.Message) (replyMsg *discordgo.MessageSend)
 	// Use function to decide what to react.
-	ReactFunc func(bot *DiscordBot, msg *discordgo.MessageCreate) (reactEmojiIDs []string)
+	ReactFunc func(bot *DiscordBot, msg *discordgo.Message) (reactEmojiIDs []string)
 
-	// Whether should reply to the user replies to.
-	ReplyToInitialMessage bool
 	// Whether to reply in DM.
-	// Meaningless if ReplyToInitialMessage is true.
 	ReplyInDM bool
+	// Whether should reply to the msg user replies to.
+	// Meaningless if ReplyInDM is true.
+	ReplyToInitialMessage bool
 
 	// Whether the author can be a bot.
 	ReplyToBot bool
+	// Deprecated: Not in use.
 	// Whether reply to the msg sent by the bot itself.
 	// Meaningless if ReplyToBot is false.
 	ReplyToSelf bool
@@ -51,7 +54,7 @@ func (bot *DiscordBot) AddReplyRules(rules ...ReplyRule) {
 }
 
 // Whether the rule should be replied.
-func (rule *ReplyRule) shouldReply(msg *discordgo.MessageCreate) bool {
+func (rule *ReplyRule) shouldReply(msg *discordgo.Message) bool {
 	// Should not reply if channel not match.
 	if !utils.ContainInArrayX(msg.ChannelID, rule.ChannelIDs) {
 		return false
@@ -93,7 +96,7 @@ func (rule *ReplyRule) shouldReply(msg *discordgo.MessageCreate) bool {
 }
 
 // Whether the rule should be replied.
-func (rule *ReplyRule) shouldReact(msg *discordgo.MessageCreate) bool {
+func (rule *ReplyRule) shouldReact(msg *discordgo.Message) bool {
 	// Should not reply if channel not match.
 	if !utils.ContainInArrayX(msg.ChannelID, rule.ChannelIDs) {
 		return false

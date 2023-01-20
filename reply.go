@@ -8,7 +8,7 @@ import (
 )
 
 // Reply to a msg.
-func (bot *DiscordBot) reply(msg *discordgo.MessageCreate, rule ReplyRule) {
+func (bot *DiscordBot) reply(msg *discordgo.Message, rule ReplyRule) {
 	replyMsg := rule.ReplyFunc(bot, msg)
 	// Some error occured or nothing to reply.
 	if replyMsg == nil {
@@ -38,7 +38,7 @@ func (bot *DiscordBot) reply(msg *discordgo.MessageCreate, rule ReplyRule) {
 }
 
 // React to a msg.
-func (bot *DiscordBot) react(msg *discordgo.MessageCreate, rule ReplyRule) {
+func (bot *DiscordBot) react(msg *discordgo.Message, rule ReplyRule) {
 	reactEmojiIDs := rule.ReactFunc(bot, msg)
 	// Some error occured or nothing to react.
 	if reactEmojiIDs == nil {
@@ -58,11 +58,11 @@ func (bot *DiscordBot) StartReply() {
 	bot.Session.AddHandler(
 		func(se *discordgo.Session, msg *discordgo.MessageCreate) {
 			for _, rule := range bot.replyRules {
-				if rule.shouldReply(msg) {
-					bot.reply(msg, rule)
+				if rule.shouldReply(msg.Message) {
+					bot.reply(msg.Message, rule)
 				}
-				if rule.shouldReact(msg) {
-					bot.react(msg, rule)
+				if rule.shouldReact(msg.Message) {
+					bot.react(msg.Message, rule)
 				}
 			}
 		},
