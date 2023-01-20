@@ -30,9 +30,9 @@ type ReplyRule struct {
 	CheckText string
 
 	// Use function to decide what to reply.
-	ReplyFunc func(bot *DiscordBot, msg *discordgo.Message) (replyMsg *discordgo.MessageSend)
+	ReplyFunc func(bot *Bot, msg *discordgo.Message) (replyMsg *discordgo.MessageSend)
 	// Use function to decide what to react.
-	ReactFunc func(bot *DiscordBot, msg *discordgo.Message) (reactEmojiIDs []string)
+	ReactFunc func(bot *Bot, msg *discordgo.Message) (reactEmojiIDs []string)
 
 	// Whether to reply in DM.
 	ReplyInDM bool
@@ -49,7 +49,7 @@ type ReplyRule struct {
 }
 
 // Add reply rules to the bot.
-func (bot *DiscordBot) AddReplyRules(rules ...ReplyRule) {
+func (bot *Bot) AddReplyRules(rules ...ReplyRule) {
 	bot.replyRules = append(bot.replyRules, rules...)
 }
 

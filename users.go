@@ -3,7 +3,7 @@ package discord
 import "github.com/bwmarrin/discordgo"
 
 // Read all members of a guild.
-func (bot *DiscordBot) AllMembers(guildID string) (allMembers []*discordgo.Member, err error) {
+func (bot *Bot) AllMembers(guildID string) (allMembers []*discordgo.Member, err error) {
 	lastID := ""
 	for {
 		newMembers, err := bot.Session.GuildMembers(guildID, lastID, 1000)

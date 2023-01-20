@@ -5,7 +5,7 @@ import (
 )
 
 // Change the bot's nicknames in the guilds.
-func (bot *DiscordBot) ChangeNames(nickname string, guilds ...string) error {
+func (bot *Bot) ChangeNames(nickname string, guilds ...string) error {
 	if nickname == "" {
 		return errors.New("nickname must not be empty")
 	}
@@ -19,7 +19,7 @@ func (bot *DiscordBot) ChangeNames(nickname string, guilds ...string) error {
 }
 
 // Change the bot's "playing" status.
-func (bot *DiscordBot) ChangePlaying(gameName string) error {
+func (bot *Bot) ChangePlaying(gameName string) error {
 	err := bot.Session.UpdateGameStatus(1, gameName)
 	if err != nil {
 		return err
@@ -28,7 +28,7 @@ func (bot *DiscordBot) ChangePlaying(gameName string) error {
 }
 
 // Change the bot's "listening" status.
-func (bot *DiscordBot) ChangeListening(listenTo string) error {
+func (bot *Bot) ChangeListening(listenTo string) error {
 	err := bot.Session.UpdateListeningStatus(listenTo)
 	if err != nil {
 		return err

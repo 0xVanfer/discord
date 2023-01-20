@@ -8,7 +8,7 @@ import (
 )
 
 // Reply to a msg.
-func (bot *DiscordBot) reply(msg *discordgo.Message, rule ReplyRule) {
+func (bot *Bot) reply(msg *discordgo.Message, rule ReplyRule) {
 	replyMsg := rule.ReplyFunc(bot, msg)
 	// Some error occured or nothing to reply.
 	if replyMsg == nil {
@@ -24,11 +24,13 @@ func (bot *DiscordBot) reply(msg *discordgo.Message, rule ReplyRule) {
 	}
 
 	// Change the target to reply to.
+	// Should reply to referenced message and referenced message exists.
+	// Will not go further like msg.ReferencedMessage.ReferencedMessage.Reference().
 	if rule.ReplyToInitialMessage && msg.ReferencedMessage != nil {
 		replyMsg.Reference = msg.ReferencedMessage.Reference()
 	}
 
-	// If not replying to anything, should send the msg in ReplyFunc.
+	// Reference still not decided, just reply to the msg.
 	if replyMsg.Reference == nil {
 		replyMsg.Reference = msg.Reference()
 	}
@@ -38,7 +40,7 @@ func (bot *DiscordBot) reply(msg *discordgo.Message, rule ReplyRule) {
 }
 
 // React to a msg.
-func (bot *DiscordBot) react(msg *discordgo.Message, rule ReplyRule) {
+func (bot *Bot) react(msg *discordgo.Message, rule ReplyRule) {
 	reactEmojiIDs := rule.ReactFunc(bot, msg)
 	// Some error occured or nothing to react.
 	if reactEmojiIDs == nil {
@@ -46,21 +48,25 @@ func (bot *DiscordBot) react(msg *discordgo.Message, rule ReplyRule) {
 	}
 
 	// React.
+	// Only react to the detected msg.
 	for _, emojiID := range reactEmojiIDs {
 		bot.Session.MessageReactionAdd(msg.ChannelID, msg.ID, emojiID)
 	}
 }
 
-// Start the reply and never stop.
-func (bot *DiscordBot) StartReply() {
+// Start the reply and react and never stop.
+func (bot *Bot) StartReply() {
 	defer utils.Restart(bot.StartReply)
 	fmt.Println("Bot", bot.BotName, "start to listen and reply.")
 	bot.Session.AddHandler(
+		// Get the new msg.
 		func(se *discordgo.Session, msg *discordgo.MessageCreate) {
 			for _, rule := range bot.replyRules {
+				// Reply if necessary.
 				if rule.shouldReply(msg.Message) {
 					bot.reply(msg.Message, rule)
 				}
+				// React if necessary.
 				if rule.shouldReact(msg.Message) {
 					bot.react(msg.Message, rule)
 				}

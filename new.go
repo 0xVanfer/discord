@@ -6,7 +6,8 @@ import (
 	"github.com/bwmarrin/discordgo"
 )
 
-type DiscordBot struct {
+// The struct for the bot.
+type Bot struct {
 	Session *discordgo.Session
 	BotName string
 	// Reply rules.
@@ -14,13 +15,14 @@ type DiscordBot struct {
 }
 
 // Create a new bot.
-func New(token string, botName string) *DiscordBot {
+func New(token string, botName string) *Bot {
 	// Return value error is always nil.
 	newSession, err := discordgo.New("Bot " + token)
 	if err != nil {
 		panic(err)
 	}
-	newBot := &DiscordBot{
+	// The new bot is created with no rules.
+	newBot := &Bot{
 		Session:    newSession,
 		BotName:    botName,
 		replyRules: []ReplyRule{},
@@ -28,8 +30,8 @@ func New(token string, botName string) *DiscordBot {
 	return newBot
 }
 
-// Start a bot.
-func (bot *DiscordBot) Open() error {
+// Start the bot.
+func (bot *Bot) Open() error {
 	err := bot.Session.Open()
 	if err != nil {
 		return err
@@ -38,8 +40,8 @@ func (bot *DiscordBot) Open() error {
 	return nil
 }
 
-// Close a bot.
-func (bot *DiscordBot) Close() {
+// Close the bot.
+func (bot *Bot) Close() {
 	bot.Session.Close()
 	fmt.Println("Bot", bot.BotName, "closed.")
 }
