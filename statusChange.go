@@ -12,7 +12,7 @@ func (bot *Bot) ChangeNames(nickname string, guilds ...string) error {
 	for _, guild := range guilds {
 		err := bot.Session.GuildMemberNickname(guild, "@me", nickname)
 		if err != nil {
-			return err
+			continue
 		}
 	}
 	return nil
