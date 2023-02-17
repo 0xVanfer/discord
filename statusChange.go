@@ -9,6 +9,11 @@ func (bot *Bot) ChangeNames(nickname string, guilds ...string) error {
 	if nickname == "" {
 		return errors.New("nickname must not be empty")
 	}
+	if len(guilds) == 0 {
+		for _, guild := range bot.Session.State.Guilds {
+			guilds = append(guilds, guild.ID)
+		}
+	}
 	for _, guild := range guilds {
 		err := bot.Session.GuildMemberNickname(guild, "@me", nickname)
 		if err != nil {
