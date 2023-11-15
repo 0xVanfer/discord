@@ -1,12 +1,12 @@
 github.com/0xVanfer/types v0.1.4 h1:bQ9IMUC70QQu0rk3fcEBYdY/whFuqDT8YCtmudx/0uw=
 github.com/0xVanfer/types v0.1.4/go.mod h1:8QSGeOQOStzyb8kAZXRVnxJLOJVMqI16lO/a+OBXFOc=
-github.com/0xVanfer/utils v0.2.7 h1:+QB3cSveDSX2tirBc0M9UnU1rhOGgh8G3xhY8sXG2AE=
-github.com/0xVanfer/utils v0.2.7/go.mod h1:Yk0psYEYoaFGdXkK2HNSigxs3CAdlyiwoTYXkryFkQc=
+github.com/0xVanfer/utils v0.3.3 h1:1dMms54p5+c9137VoKIW+hgalZoCZJp2TboEAA/KmCU=
+github.com/0xVanfer/utils v0.3.3/go.mod h1:Yk0psYEYoaFGdXkK2HNSigxs3CAdlyiwoTYXkryFkQc=
 github.com/btcsuite/btcd/btcec/v2 v2.2.0 h1:fzn1qaOt32TuLjFlkzYSsBC35Q3KUjT1SwPxiMSCF5k=
 github.com/btcsuite/btcd/btcec/v2 v2.2.0/go.mod h1:U7MHm051Al6XmscBQ0BoNydpOTsFAn707034b5nY8zU=
 github.com/btcsuite/btcd/chaincfg/chainhash v1.0.1 h1:q0rUy8C/TYNBQS1+CGKw68tLOFYSNEs0TFnxxnS9+4U=
-github.com/bwmarrin/discordgo v0.27.0 h1:4ZK9KN+rGIxZ0fdGTmgdCcliQeW8Zhu6MnlFI92nf0Q=
-github.com/bwmarrin/discordgo v0.27.0/go.mod h1:NJZpH+1AfhIcyQsPeuBKsUtYrRnjkyu0kIVMCHkZtRY=
+github.com/bwmarrin/discordgo v0.27.1 h1:ib9AIc/dom1E/fSIulrBwnez0CToJE113ZGt4HoliGY=
+github.com/bwmarrin/discordgo v0.27.1/go.mod h1:NJZpH+1AfhIcyQsPeuBKsUtYrRnjkyu0kIVMCHkZtRY=
 github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c=
 github.com/decred/dcrd/crypto/blake256 v1.0.0 h1:/8DMNYp9SGi5f0w7uCm6d6M4OU2rGFK09Y2A4Xv7EE0=
 github.com/decred/dcrd/crypto/blake256 v1.0.0/go.mod h1:sQl2p6Y26YV+ZOcSTP6thNdn47hh8kt6rqSlvmrXFAc=

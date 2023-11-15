@@ -3,8 +3,8 @@ module github.com/0xVanfer/discord
 go 1.19
 
 require (
-	github.com/0xVanfer/utils v0.2.7
-	github.com/bwmarrin/discordgo v0.27.0
+	github.com/0xVanfer/utils v0.3.3
+	github.com/bwmarrin/discordgo v0.27.1
 )
 
 require (

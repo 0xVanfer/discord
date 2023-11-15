@@ -56,7 +56,7 @@ func (bot *Bot) AddReplyRules(rules ...ReplyRule) {
 // Whether the rule should be replied.
 func (rule *ReplyRule) shouldReply(msg *discordgo.Message) bool {
 	// Should not reply if channel not match.
-	if !utils.ContainInArrayX(msg.ChannelID, rule.ChannelIDs) {
+	if !utils.ContainInArrayX(msg.ChannelID, rule.ChannelIDs...) {
 		return false
 	}
 	if !rule.ReplyToBot && msg.Author.Bot {
@@ -98,7 +98,7 @@ func (rule *ReplyRule) shouldReply(msg *discordgo.Message) bool {
 // Whether the rule should be replied.
 func (rule *ReplyRule) shouldReact(msg *discordgo.Message) bool {
 	// Should not reply if channel not match.
-	if !utils.ContainInArrayX(msg.ChannelID, rule.ChannelIDs) {
+	if !utils.ContainInArrayX(msg.ChannelID, rule.ChannelIDs...) {
 		return false
 	}
 	switch rule.RuleType {
